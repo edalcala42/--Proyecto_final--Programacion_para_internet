@@ -17,7 +17,7 @@ Route::get('/hello', function () {
     return view('hola');
 });
 
-Route::resource('juego', JuegoController::class);
+Route::resource('juegos', JuegoController::class);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

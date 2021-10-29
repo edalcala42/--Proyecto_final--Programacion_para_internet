@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Genero;
+use App\Models\Juego;
+use App\Models\Imagen;
 
 class JuegoController extends Controller
 {
@@ -30,7 +33,9 @@ class JuegoController extends Controller
     // Para guardarlos de verdad, se hace uso del método store
     public function create()
     {
-        return view('create_juego');
+        // Para crear un juego, se necesita de un modelo.
+        $generos = Genero::All();
+        return view('create_juego', compact('generos'));
     }
 
     /**
@@ -43,7 +48,34 @@ class JuegoController extends Controller
     // Aquí se guarda el nuevo registro en la base de datos
     public function store(Request $request)
     {
-        return view('index_juegos');
+        // Validar datos
+        $request->validate([
+            'titulo' => 'required|max:100|unique:App\Models\Juego,titulo',
+            'fecha_de_publicacion' => 'required',
+            'empresa_editora' => 'required|max:255',
+            'descripcion' => 'required',
+        ]);
+        
+        //$request->merge([
+        //    'juego_id' => $request->juego,
+        //    'apellido_materno' => $request->apellido_materno ?? ' ',
+        //]);
+
+        $juego = Juego::create($request->all());
+        
+        $juego->generos()->attach($request->genero_id);
+        $juego->save();
+
+        $imagen = new Imagen();  
+        $imagen->juego_id = $juego->id;
+        $imagen->imagen = $request->imagen; 
+        $imagen->save(); 
+
+        $juego->imagenes()->save($imagen);
+        
+        //Auth::user()->personas->save($persona);
+        
+        return redirect()->route('juegos.index');
     }
 
     /**

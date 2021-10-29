@@ -18,7 +18,7 @@ class CreateJuegosTable extends Migration
             $table->string('titulo');
             $table->text('descripcion');
             $table->date('fecha_de_publicacion');
-            $table->date('empresa_editora');
+            $table->string('empresa_editora');
             $table->timestamps();
         });
     }

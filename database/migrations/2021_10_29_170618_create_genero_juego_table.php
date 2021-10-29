@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateImagenesTable extends Migration
+class CreateGeneroJuegoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateImagenesTable extends Migration
      */
     public function up()
     {
-        Schema::create('imagenes', function (Blueprint $table) {
-            $table->id();
+        Schema::create('genero_juego', function (Blueprint $table) {
+            $table->foreignId('genero_id')->constrained()->onDelete('cascade');
             $table->foreignId('juego_id')->constrained();
-            $table->binary('imagen');
-            $table->timestamps();
         });
     }
 
@@ -28,6 +26,6 @@ class CreateImagenesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('imagenes');
+        Schema::dropIfExists('genero_juego');
     }
 }
