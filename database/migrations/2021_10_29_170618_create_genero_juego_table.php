@@ -15,7 +15,7 @@ class CreateGeneroJuegoTable extends Migration
     {
         Schema::create('genero_juego', function (Blueprint $table) {
             $table->foreignId('genero_id')->constrained()->onDelete('cascade');
-            $table->foreignId('juego_id')->constrained();
+            $table->foreignId('juego_id')->constrained()->onDelete('cascade');
         });
     }
 

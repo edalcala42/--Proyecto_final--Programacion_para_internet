@@ -541,7 +541,17 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
 </style>
 
 <form class="jotform-form" action="{{ route('juegos.store')}}" method="POST" enctype="multipart/form-data" name="form_213005419183852" id="213005419183852" accept-charset="utf-8" autocomplete="on">
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
   @csrf
+  <form action="{{ route('juegos.store')}}" method="POST">
   <input type="hidden" name="formID" value="213005419183852" />
   <input type="hidden" id="JWTContainer" value="" />
   <input type="hidden" id="cardinalOrderNumber" value="" />
@@ -554,7 +564,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
         <div class="form-header-group  header-large">
           <div class="header-text httal htvam">
             <h1 id="header_1" class="form-header" data-component="header">
-              Añade un nuevo juego a la librería!
+              ¡Añade un nuevo juego a la librería!
             </h1>
           </div>
         </div>
@@ -564,11 +574,11 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
         <div id="cid_4" class="form-input-wide" data-layout="full">
           <div data-wrapper-react="true">
             <span class="form-sub-label-container" style="vertical-align:top" data-input-type="first">
-              <input type="text" id="first_4" name="titulo" class="form-textbox" data-defaultvalue="" size="10" value="" data-component="first" aria-labelledby="label_4 sublabel_4_first" />
+              <input type="text" id="first_4" name="titulo" class="form-textbox" size="10" data-component="first" aria-labelledby="label_4 sublabel_4_first"/>
               <label class="form-sub-label" for="first_4" id="sublabel_4_first" style="min-height:13px" aria-hidden="false"> Título </label>
             </span>
             <span class="form-sub-label-container" style="vertical-align:top" data-input-type="last">
-              <input type="date" id="last_4" name="fecha_de_publicacion" class="form-textbox" data-defaultvalue="" size="15" value="" data-component="last" aria-labelledby="label_4 sublabel_4_last" />
+              <input type="date" id="last_4" name="fecha_de_publicacion" class="form-textbox" size="15" data-component="last" aria-labelledby="label_4 sublabel_4_last" />
               <label class="form-sub-label" for="last_4" id="sublabel_4_last" style="min-height:13px" aria-hidden="false"> Fecha de publicación </label>
             </span>
           </div>
@@ -578,28 +588,30 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
         <label class="form-label form-label-top form-label-auto" id="label_5" for="input_5"> Compañía editora </label>
         <div id="cid_5" class="form-input-wide" data-layout="half">
           <span class="form-sub-label-container" style="vertical-align:top">
-            <input type="text" id="input_5" name="empresa_editora" data-defaultvalue="" style="width:310px" size="310" value="" aria-labelledby="label_5 sublabel_input_5" />
+            <input type="text" id="input_5" name="empresa_editora" style="width:310px" size="310" aria-labelledby="label_5 sublabel_input_5" />
           </span>
         </div>
       </li>
       <li class="form-line" data-type="control_dropdown" id="id_7">
         <label class="form-label form-label-top form-label-auto" id="label_7" for="input_7"> Genero </label>
         <div id="cid_7" class="form-input-wide" data-layout="half">
-          <select class="form-dropdown" id="input_7" name="genero_id[]" style="width:310px" data-component="dropdown">
-            @foreach($generos as $genero)
-                <option value="{{$genero->id}}">
-                    {{$genero->nombre_genero}}  
-                </option>
-            @endforeach
+          <select class="form-dropdown" id="input_7" name="genero_id[]" style="width:310px" data-component="dropdown" multiple>
+          @foreach($generos as $genero)
+      		  <option value="{{$genero->id}}" 
+              {{ isset($juego) 
+                && array_search($genero->id, $juego->generos->pluck('id')->toArray()) !== false ? 'selected' : ''}}>
+                {{$genero->nombre_genero}}        
+         	  </option>
+   	      @endforeach
           </select>
         </div>
       </li>
       <label for="imagen">Sube una imagen del juego, por favor</label>
       <input type="file" id="imagen" name="imagen" accept="image/png, image/jpeg">
       <li class="form-line" data-type="control_textarea" id="id_8">
-        <label class="form-label form-label-top form-label-auto" id="label_8" for="input_8"> Descripción del juego </label>
+        <label class="form-label form-label-top form-label-auto" id="label_8" for="input_8"> Descripción del juego: <br> {{ $juego->descripcion ?? ''}} <br> </label>
         <div id="cid_8" class="form-input-wide" data-layout="full">
-          <textarea id="input_8" class="form-textarea" name="descripcion" style="width:648px;height:163px" data-component="textarea" aria-labelledby="label_8"></textarea>
+          <textarea id="input_8" class="form-textarea" name="descripcion" style="width:648px;height:163px" data-component="textarea" aria-labelledby="label_8" value="{{ $juego->descripcion ?? ''}}"></textarea>
         </div>
       </li>
       <li class="form-line" data-type="control_button" id="id_2">
