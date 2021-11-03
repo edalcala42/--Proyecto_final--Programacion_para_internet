@@ -24,6 +24,8 @@
         <br>
         Última edición:
         <li>{{ $juego->updated_at }}</li>
+        Añadido por el usuario:
+        <li>{{ $juego->user_id }}</li>
     </ul>
     <hr>
     <hr>

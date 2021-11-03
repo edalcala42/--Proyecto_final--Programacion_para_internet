@@ -8,12 +8,13 @@ use App\Models\Juego;
 use App\Models\Imagen;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class JuegoController extends Controller
 {
     public function __construct()
     {
-        #$this->middleware('auth')->except('index', 'show');
+        $this->middleware('auth')->except('index');
     }
     /**
      * Display a listing of the resource.
@@ -59,13 +60,11 @@ class JuegoController extends Controller
             'descripcion' => 'required',
         ]);
         
-        //$request->merge([
-        //    'juego_id' => $request->juego,
-        //    'apellido_materno' => $request->apellido_materno ?? ' ',
-        //]);
-
-        $juego = Juego::create($request->all());
+        $request->merge([
+            'user_id' => Auth::id(),
+        ]);
         
+        $juego = Juego::create($request->all());
         $juego->generos()->attach($request->genero_id);
         $juego->save();
 
@@ -75,8 +74,6 @@ class JuegoController extends Controller
         $imagen->save(); 
 
         $juego->imagenes()->save($imagen);
-        
-        //Auth::user()->personas->save($juego);
         
         return redirect()->route('juegos.index');
     }
@@ -129,10 +126,9 @@ class JuegoController extends Controller
         ]);
         $image_just_in_case = Imagen::where('juego_id', $juego->id)->first();
         $request->merge([
-            #'user_id' => Auth::id(),
+            'user_id' => $juego->user_id,
             'descripcion' => $request->descripcion ?? $juego->descripcion,
             'imagen' => $request->imagen ?? $image_just_in_case,
-            #$personas = Persona::with('areas')->get();
         ]);
         Juego::where('id', $juego->id)->update($request->except('_token', '_method', 'genero_id', 'imagen'));
         $juego->generos()->sync($request->genero_id);
@@ -155,15 +151,7 @@ class JuegoController extends Controller
     // Este método se encarga de eliminar a la persona que recibe como parámetro
     public function destroy(Juego $juego)
     {
-        return view('index_juegos');
-        #$juego->delete();
-        #return redirect()->route('index');
-    }
-
-    // Este método, a diferencia del resto, no se utiliza como página de interacción con el usuario, sino que
-    // funciona como indicador de la relación que el modelo correspondiente a este controlador 
-    // tiene con otra clase
-    public function user(){
-        #return $this->belongsTo(User::class);
+        $juego->delete();
+        return redirect()->route('juegos.index');
     }
 }

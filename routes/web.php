@@ -13,6 +13,10 @@ use App\Http\Controllers\JuegoController;
 |
 */
 
+Route::get('/', function(){
+    return view('welcome');
+});
+
 Route::get('/hello', function () {
     return view('hola');
 });

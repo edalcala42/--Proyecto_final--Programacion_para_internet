@@ -9,6 +9,7 @@ class Juego extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'titulo',
         'descripcion', 
         'fecha_de_publicacion',
@@ -19,5 +20,8 @@ class Juego extends Model
     }
     public function imagenes(){
         return $this->hasMany(Imagen::class);
+    }
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }
