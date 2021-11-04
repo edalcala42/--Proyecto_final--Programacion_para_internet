@@ -36,5 +36,7 @@
         @csrf
         <input type="submit" value="Eliminar">
     </form>
+    <hr>
+    <a href="{{ route('enviar-correo') }}">Comprar Juego</a>
 </body>
 </html>

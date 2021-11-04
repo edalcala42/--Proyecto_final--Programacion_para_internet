@@ -22,6 +22,7 @@ Route::get('/hello', function () {
     return view('hola');
 });
 
+Route::get('enviar-correo', [JuegoController::Class, 'enviarJuego'])->name('enviar-correo');
 Route::resource('juegos', JuegoController::class);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {

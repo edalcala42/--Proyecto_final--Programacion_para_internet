@@ -9,6 +9,8 @@ use App\Models\Imagen;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TicketJuegoAdquirido;
 
 class JuegoController extends Controller
 {
@@ -153,5 +155,11 @@ class JuegoController extends Controller
     {
         $juego->delete();
         return redirect()->route('juegos.index');
+    }
+
+    public function enviarJuego()
+    {
+        Mail::to('someone@test.com')->send(new TicketJuegoAdquirido);
+        return redirect()->back();
     }
 }
