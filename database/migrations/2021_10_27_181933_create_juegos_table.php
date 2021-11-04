@@ -20,7 +20,9 @@ class CreateJuegosTable extends Migration
             $table->text('descripcion');
             $table->date('fecha_de_publicacion');
             $table->string('empresa_editora');
+            $table->float('precio');
             $table->timestamps();
+            $table->SoftDeletes();
         });
     }
 

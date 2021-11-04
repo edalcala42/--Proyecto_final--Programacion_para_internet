@@ -20,17 +20,18 @@
                 <th>Empresa editora</th>
                 <th>Añadido</th>
                 <th>Última edición</th>
+                <th>Precio ($mx)</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($juegos as $juego)
                 <tr>
                     <td>
-                        <ol>
+                        <ul>
                             @foreach($juego->generos as $genero)
                                 <li> {{$genero->nombre_genero}} </li>
                             @endforeach
-                        </ol>
+                        </ul>
                     </td>
                     <td><a href="{{ route('juegos.show', $juego) }}">
                             {{ $juego->id }}
@@ -42,6 +43,7 @@
                     <td>{{ $juego->empresa_editora }}</td>
                     <td>{{ $juego->created_at }}</td>
                     <td>{{ $juego->updated_at }}</td>
+                    <td>{{ $juego->precio }}</td>
                 </tr>
             @endforeach
         </tbody>
