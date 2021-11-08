@@ -540,7 +540,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
     /* Injected CSS Code */
 </style>
 
-<form class="jotform-form" action="{{ route('juegos.update', $juego)}}" method="POST">
+<form class="jotform-form" action="{{ route('juegos.update', $juego)}}" method="POST" enctype="multipart/form-data">
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul>
@@ -562,7 +562,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
         <div class="form-header-group  header-large">
           <div class="header-text httal htvam">
             <h1 id="header_1" class="form-header" data-component="header">
-              Edita un juego existente(2).
+              Edita un juego existente.
             </h1>
           </div>
         </div>

@@ -8,8 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Imagen extends Model
 {
     use HasFactory;
+    protected $table = 'imagenes';
+    protected $fillable = [
+        'imagen_original',
+        'imagen_ruta',
+        'mime',
+    ];
     public function juego(){
         return $this->belongsTo(Juego::class);
     }
-    protected $table = 'imagenes';
 }

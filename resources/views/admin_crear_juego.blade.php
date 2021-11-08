@@ -551,7 +551,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
     </div>
   @endif
   @csrf
-  <form action="{{ route('juegos.store')}}" method="POST">
+  <form action="{{ route('juegos.store')}}" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="formID" value="213005419183852" />
   <input type="hidden" id="JWTContainer" value="" />
   <input type="hidden" id="cardinalOrderNumber" value="" />
@@ -615,7 +615,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
         </div>
       </li>
       <label for="imagen">Sube una imagen del juego, por favor</label>
-      <input type="file" id="imagen" name="imagen" accept="image/png, image/jpeg">
+      <input type="file" id="imagen" name="imagen" accept="image/png, image/jpeg" multiple>
       <li class="form-line" data-type="control_textarea" id="id_8">
         <label class="form-label form-label-top form-label-auto" id="label_8" for="input_8"> Descripción del juego: <br> {{ $juego->descripcion ?? ''}} <br> </label>
         <div id="cid_8" class="form-input-wide" data-layout="full">

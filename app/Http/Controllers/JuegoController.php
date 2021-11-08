@@ -62,20 +62,30 @@ class JuegoController extends Controller
             'descripcion' => 'required',
         ]);
         
+        $ruta = $request->imagen->store('imagenes');
+        $mime = $request->imagen->getClientMimeType();
+        $nombre_original = $request->imagen->getClientOriginalName();
+        
         $request->merge([
+            'imagen_original' => $nombre_original,
+            'imagen_ruta' => $ruta,
+            'mime' => $mime,
             'user_id' => Auth::id(),
         ]);
         
-        $juego = Juego::create($request->all());
+        #$juego = Juego::create($request->all());
+        $juego = Juego::create($request->except('_token', '_method', 'genero_id', 'imagen'));
         $juego->generos()->attach($request->genero_id);
         $juego->save();
 
-        $imagen = new Imagen();  
-        $imagen->juego_id = $juego->id;
-        $imagen->imagen = $request->imagen; 
-        $imagen->save(); 
+        $imagenTable = new Imagen();  
+        $imagenTable->juego_id = $juego->id;
+        $imagenTable->imagen_original = $request->imagen_original; 
+        $imagenTable->imagen_ruta = $request->imagen_ruta; 
+        $imagenTable->mime = $request->mime; 
+        $imagenTable->save(); 
 
-        $juego->imagenes()->save($imagen);
+        $juego->imagenes()->save($imagenTable);
         
         return redirect()->route('juegos.index');
     }
@@ -126,20 +136,37 @@ class JuegoController extends Controller
             'fecha_de_publicacion' => 'required',
             'empresa_editora' => 'required|max:255',
         ]);
-        $image_just_in_case = Imagen::where('juego_id', $juego->id)->first();
+        
+        #$image_just_in_case = Imagen::where('juego_id', $juego->id)->first();
+        if($request->imagen === null){
+            $ruta = Imagen::where('juego_id', $juego->id)->first()->imagen_ruta;
+            $mime = Imagen::where('juego_id', $juego->id)->first()->mime;
+            $nombre_original = Imagen::where('juego_id', $juego->id)->first()->imagen_original;
+        }
+        else{
+            $ruta = $request->imagen->store();
+            $mime = $request->imagen->getClientMimeType();
+            $nombre_original = $request->imagen->getClientOriginalName();
+        }
+
         $request->merge([
             'user_id' => $juego->user_id,
             'descripcion' => $request->descripcion ?? $juego->descripcion,
-            'imagen' => $request->imagen ?? $image_just_in_case,
+            'imagen_original' => $nombre_original,
+            'imagen_ruta' => $ruta,
+            'mime' => $mime,
+            #'imagen' => $request->imagen ?? $image_just_in_case,
         ]);
-        Juego::where('id', $juego->id)->update($request->except('_token', '_method', 'genero_id', 'imagen'));
+        Juego::where('id', $juego->id)->update($request->except('_token', '_method', 'genero_id', 'imagen_original', 'imagen_ruta', 'mime'));
         $juego->generos()->sync($request->genero_id);
         
-        $imagen = new Imagen();  
-        $imagen->juego_id = $juego->id;
-        $imagen->imagen = $request->imagen; 
-        $imagen->save(); 
-        $juego->imagenes()->save($imagen);
+        $imagenTable = new Imagen();  
+        $imagenTable->juego_id = $juego->id;
+        $imagenTable->imagen_ruta = $request->imagen_ruta; 
+        $imagenTable->imagen_original = $request->imagen_original; 
+        $imagenTable->mime = $request->mime; 
+        $imagenTable->save(); 
+        $juego->imagenes()->save($imagenTable);
         
         return redirect()->route('juegos.show', $juego);
     }
