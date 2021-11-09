@@ -16,7 +16,7 @@ class JuegoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except('index');
+        #$this->middleware('auth')->except('index');
     }
     /**
      * Display a listing of the resource.
@@ -24,8 +24,9 @@ class JuegoController extends Controller
      * @return \Illuminate\Http\Response
      */
     //Página principal de juegos. Se muestra todo.
-    public function index()
+    public function index(Request $request)
     {
+        $request->user()->authorizeRoles('Administrador');
         $juegos = Juego::All();
         return view('admin_show_all_juegos', compact('juegos'));
     }

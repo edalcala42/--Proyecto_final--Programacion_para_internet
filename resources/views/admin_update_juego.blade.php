@@ -590,6 +590,14 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
           </span>
         </div>
       </li>
+      <li class="form-line" data-type="control_fullname" id="id_4">
+        <label class="form-label form-label-top form-label-auto" id="label_5" for="input_5"> Precio ($mx)</label>
+        <div id="cid_5" class="form-input-wide" data-layout="half">
+          <span class="form-sub-label-container" style="vertical-align:top">
+            <input type="number" id="input_5" name="precio" style="width:310px" size="310" value="{{ $juego->precio ?? ''}}" aria-labelledby="label_5 sublabel_input_5" />
+          </span>
+        </div>
+      </li>
       <li class="form-line" data-type="control_dropdown" id="id_7">
         <label class="form-label form-label-top form-label-auto" id="label_7" for="input_7"> Genero </label>
         <div id="cid_7" class="form-input-wide" data-layout="half">
