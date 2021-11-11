@@ -131,12 +131,14 @@ class JuegoController extends Controller
             }
             else{
                 $sesion_usuario = 1;
-                return view('admin_show_juego', compact('juego', 'sesion_usuario'));
+                $comentarios = Comentario::where('juego_id', $juego->id)->get();
+                return view('admin_show_juego', compact('juego', 'sesion_usuario', 'comentarios'));
             }
         }
         else{
             $sesion_invitado = 1;
-            return view('admin_show_juego', compact('juego', 'sesion_invitado'));
+            $comentarios = Comentario::where('juego_id', $juego->id)->get();
+            return view('admin_show_juego', compact('juego', 'sesion_invitado', 'comentarios'));
         }
     }
 
@@ -153,11 +155,11 @@ class JuegoController extends Controller
         ]);
         $comentarioTable = new Comentario();
         $comentarioTable->user_id = $request->user_id;
+        $comentarioTable->juego_id = $juego->id;
         $comentarioTable->comentario = $request->comentario;
         $comentarioTable->save();
-        $comentarioTable->juegos()->attach($juego->id);
 
-        return redirect()->route('main_page');
+        return redirect()->back();
     }
 
     /**
@@ -166,6 +168,7 @@ class JuegoController extends Controller
      * @param  \App\Models\Juego  $juego
      * @return \Illuminate\Http\Response
      */
+
     // Aquí se llama a la ventana de creación, pero con un parámetro extra que le indica que en
     // lugar de crear datos, se hará modificación de estos. Es decir, editarlos.
     public function edit(Juego $juego, Request $request)
@@ -248,9 +251,11 @@ class JuegoController extends Controller
         return redirect()->route('juegos.index');
     }
 
-    public function enviarJuego()
+    public function enviarJuego(Request $request, Juego $juego)
     {
-        Mail::to('someone@test.com')->send(new TicketJuegoAdquirido);
+        $user = Auth::user();
+        $juego->users()->attach($user->id);
+        Mail::to($user->email)->send(new TicketJuegoAdquirido);
         return redirect()->back();
     }
 }

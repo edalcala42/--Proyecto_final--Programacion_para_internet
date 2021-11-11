@@ -27,10 +27,10 @@ class Juego extends Model
     public function imagenes(){
         return $this->hasMany(Imagen::class);
     }
-    public function user(){
-        return $this->belongsTo(User::class);
+    public function users(){
+        return $this->belongsToMany(User::class);
     }
     public function comentarios(){
-        return $this->belongsToMany(Comentario::class);
+        return $this->hasMany(Comentario::class);
     }
 }

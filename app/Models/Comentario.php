@@ -11,7 +11,4 @@ class Comentario extends Model
     protected $fillable = [
         'comentario',
     ];
-    public function juegos(){
-        return $this->belongsToMany(Juego::class);
-    }
 }

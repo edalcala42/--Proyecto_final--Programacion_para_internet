@@ -22,7 +22,7 @@ Route::get('/hello', function () {
     return view('hola');
 });
 
-Route::get('enviar-correo', [JuegoController::Class, 'enviarJuego'])->name('enviar-correo');
+Route::get('enviar-correo/{juego}', [JuegoController::Class, 'enviarJuego'])->name('enviar-correo');
 Route::resource('juegos', JuegoController::class);
 Route::get('store-comentario/{juego}', [JuegoController::class, 'storeComentario'])->name('store-comentario');
 

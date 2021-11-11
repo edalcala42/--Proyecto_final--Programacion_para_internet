@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
     
     public function juegos(){
-        return $this->hasMany(Juego::class);
+        return $this->belongsToMany(Juego::class);
     }
     
     public function roles(){

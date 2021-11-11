@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateComentarioJuegoTable extends Migration
+class CreateJuegoUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateComentarioJuegoTable extends Migration
      */
     public function up()
     {
-        Schema::create('comentario_juego', function (Blueprint $table) {
-            $table->foreignId('comentario_id')->constrained()->onDelete('cascade');
+        Schema::create('juego_user', function (Blueprint $table) {
             $table->foreignId('juego_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -26,6 +26,6 @@ class CreateComentarioJuegoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comentario_juego');
+        Schema::dropIfExists('juego_user');
     }
 }

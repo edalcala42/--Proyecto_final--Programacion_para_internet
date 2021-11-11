@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datos de {{ $juego->titulo }}</title>
-</head>
+@include('top')
 <body>
-    <h1>Información de {{ $juego->titulo }}</h1>
+    <h1>{{ $juego->titulo }}</h1>
     <a href="{{route('main_page')}}">Otros juegos disponibles</a>
     <ul>
         Descripcion:
@@ -51,9 +44,25 @@
             <input type="submit" value="Enviar">
         </form>
         <hr>
-        <a href="{{ route('enviar-correo') }}">Comprar Juego</a>
+        <a href="{{ route('enviar-correo', $juego->id) }}">Comprar Juego</a>
     <?php endif; ?>
-      
+    <hr>
+    Comentarios del juego:
+    <table border="1">
+        <thead>
+            <tr>
+                <th>user_id</th>
+                <th>Comentario</th>
+            </tr>
+        </thead>
+        @foreach ($comentarios as $comentario)
+            <tr>
+                <td>{{ $comentario->user_id }}</td>
+                <td>{{ $comentario->comentario }}</td>
+            </tr>
+        @endforeach
+        <hr>  
+    </table>
     <?php if(isset($editar)) : ?>
         <hr>
         <a href="{{route('juegos.edit', $juego->id)}}">Editar</a>
