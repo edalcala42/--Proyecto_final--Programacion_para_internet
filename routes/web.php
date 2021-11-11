@@ -16,7 +16,7 @@ use App\Http\Controllers\JuegoController;
 Route::get('/', function(){
     #return view('welcome');
     return view('index_juegos');
-});
+})->name('main_page');
 
 Route::get('/hello', function () {
     return view('hola');
@@ -24,6 +24,7 @@ Route::get('/hello', function () {
 
 Route::get('enviar-correo', [JuegoController::Class, 'enviarJuego'])->name('enviar-correo');
 Route::resource('juegos', JuegoController::class);
+Route::get('store-comentario/{juego}', [JuegoController::class, 'storeComentario'])->name('store-comentario');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');

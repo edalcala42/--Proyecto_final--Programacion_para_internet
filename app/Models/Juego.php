@@ -10,6 +10,9 @@ class Juego extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    protected $hidden = [
+        'id',
+    ];
     protected $fillable = [
         'user_id',
         'titulo',
@@ -26,5 +29,8 @@ class Juego extends Model
     }
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public function comentarios(){
+        return $this->belongsToMany(Comentario::class);
     }
 }

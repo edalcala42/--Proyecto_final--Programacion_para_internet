@@ -7,7 +7,7 @@
     <title>Listado de juegos</title>
 </head>
 <body>
-    <h1>Juegos registrados.</h1>
+    <h1>Blogs registrados.</h1>
     <a href="{{ route('juegos.create') }}">Agregar un nuevo juego.</a>
     <table border="1">
         <thead>

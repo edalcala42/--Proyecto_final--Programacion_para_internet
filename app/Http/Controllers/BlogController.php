@@ -3,17 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Genero;
-use App\Models\Juego;
-use App\Models\Imagen;
-use App\Models\Comentario;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\TicketJuegoAdquirido;
 
-class JuegoController extends Controller
+class BlogController extends Controller
 {
     public function __construct()
     {
@@ -28,9 +19,9 @@ class JuegoController extends Controller
     public function index(Request $request)
     {
         if($request->user()){
-            $request->user()->authorizeRoles('Administrador');
-            $juegos = Juego::All();
-            $imagenes = Imagen::All();
+            $request->user()->authorizeRoles('Administrador', 'Blogger');
+            $blogs = Blog::All();
+            #$imagenes = Imagen::All();
         }
         else{
             abort(401, 'No estás autorizado para realizar esta acción');
@@ -123,41 +114,18 @@ class JuegoController extends Controller
     // Aquí se muestra los datos correspondientes a un juego en específico
     public function show(Juego $juego, Request $request)
     {
-        if($request->user()){    
+        if($request->user()){
             if($request->user()->hasRole('Administrador')){
-                $sesion_admin = 1;
                 $editar = 1;
-                return view('admin_show_juego', compact('juego', 'editar', 'sesion_admin'));
+                return view('admin_show_juego', compact('juego', 'editar'));
             }
             else{
-                $sesion_usuario = 1;
-                return view('admin_show_juego', compact('juego', 'sesion_usuario'));
+                return view('admin_show_juego', compact('juego'));
             }
         }
         else{
-            $sesion_invitado = 1;
-            return view('admin_show_juego', compact('juego', 'sesion_invitado'));
+            return view('admin_show_juego', compact('juego'));
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Juego  $juego
-     * @return \Illuminate\Http\Response
-     */
-    
-    public function storeComentario(Request $request, Juego $juego){
-        $request->merge([
-            'user_id' => Auth::id(),
-        ]);
-        $comentarioTable = new Comentario();
-        $comentarioTable->user_id = $request->user_id;
-        $comentarioTable->comentario = $request->comentario;
-        $comentarioTable->save();
-        $comentarioTable->juegos()->attach($juego->id);
-
-        return redirect()->route('main_page');
     }
 
     /**
@@ -246,11 +214,5 @@ class JuegoController extends Controller
     {
         $juego->delete();
         return redirect()->route('juegos.index');
-    }
-
-    public function enviarJuego()
-    {
-        Mail::to('someone@test.com')->send(new TicketJuegoAdquirido);
-        return redirect()->back();
     }
 }
