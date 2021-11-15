@@ -17,6 +17,7 @@ class CreateComentariosTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('juego_id')->constrained()->onDelete('cascade');
+            $table->foreignId('blog_id')->nullable()->onDelete('cascade');
             $table->text('comentario');
             $table->timestamps();
         });

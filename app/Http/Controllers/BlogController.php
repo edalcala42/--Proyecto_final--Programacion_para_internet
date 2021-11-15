@@ -1,6 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Blog;
+use App\Models\Juego;
+use App\Models\Imagen;
+use App\Models\Comentario;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 
@@ -15,20 +23,17 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    //Página principal de juegos. Se muestra todo.
+    
     public function index(Request $request)
     {
         if($request->user()){
-            $request->user()->authorizeRoles('Administrador', 'Blogger');
+            $request->user()->authorizeRoles('Blogger');
             $blogs = Blog::All();
-            #$imagenes = Imagen::All();
         }
         else{
             abort(401, 'No estás autorizado para realizar esta acción');
         }
-        
-
-        return view('admin_show_all_juegos', compact('juegos', 'imagenes'));
+        return view('blogger_show_all_blogs', compact('blogs'));
     }
 
     /**
@@ -36,15 +41,14 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // Se muestra una página para crear juegos. Es decir, se muestran los campos a llenar.
-    // Para guardarlos de verdad, se hace uso del método store
+
     public function create(Request $request)
     {
         // Para crear un juego, se necesita de un modelo.
         if($request->user()){
-            $request->user()->authorizeRoles('Administrador');
-            $generos = Genero::All();
-            return view('admin_crear_juego', compact('generos'));
+            $request->user()->authorizeRoles('Blogger');
+            $juegos = Juego::All();
+            return view('blogger_crear_blog', compact('juegos'));
         }
         else{
             abort(401, 'No estás autorizado para realizar esta acción');
@@ -64,84 +68,82 @@ class BlogController extends Controller
     {
         // Validar datos
         $request->validate([
-            'titulo' => 'required|max:100|unique:App\Models\Juego,titulo',
-            'fecha_de_publicacion' => 'required',
-            'empresa_editora' => 'required|max:255',
-            'descripcion' => 'required',
+            'titulo' => 'required|max:100|unique:App\Models\Blog,titulo',
+            'juego_id' => 'required',
+            'contenido' => 'required',
         ]);
         
-        #$ruta = $request->imagen->store('imagenes');
-
-        #$file = $request->file('index_image');
-        #$file->storeAs('Images', "my-cool-name." . $file->getClientOriginalExtension());
-
-        $mime = $request->imagen->getClientMimeType();
-        $nombre_original = $request->imagen->getClientOriginalName();
-        #$ruta = $request->imagen->store('toPath', ['disk' => 'my_files']);
-        $ruta = $request->imagen->store('images', ['disk' => 'my_files']);
-        #$ruta = $request->imagen->store('images');
-        
         $request->merge([
-            'imagen_original' => $nombre_original,
-            'imagen_ruta' => $ruta,
-            'mime' => $mime,
             'user_id' => Auth::id(),
         ]);
         
-        #$juego = Juego::create($request->all());
-        $juego = Juego::create($request->except('_token', '_method', 'genero_id', 'imagen'));
-        $juego->generos()->attach($request->genero_id);
-        $juego->save();
-
-        $imagenTable = new Imagen();  
-        $imagenTable->juego_id = $juego->id;
-        $imagenTable->imagen_original = $request->imagen_original; 
-        $imagenTable->imagen_ruta = $request->imagen_ruta; 
-        $imagenTable->mime = $request->mime; 
-        $imagenTable->save(); 
-
-        $juego->imagenes()->save($imagenTable);
+        $blog = new Blog();
+        $blog->user_id = $request->user_id;
+        $blog->juego_id = $request->juego_id;
+        $blog->titulo = $request->titulo;
+        $blog->contenido = $request->contenido;
+        $blog->save(); 
         
-        return redirect()->route('juegos.index');
+        return redirect()->route('blogs.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Juego  $juego
+     * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    // Aquí se muestra los datos correspondientes a un juego en específico
-    public function show(Juego $juego, Request $request)
+    
+    public function show(Blog $blog, Request $request)
     {
+        $comentarios = Comentario::where('blog_id', $blog->id)->get();
         if($request->user()){
-            if($request->user()->hasRole('Administrador')){
-                $editar = 1;
-                return view('admin_show_juego', compact('juego', 'editar'));
+            if($request->user()->hasRole('Blogger')){
+                $sesion_blogger = 1;
+                return view('blogger_show_blog', compact('blog', 'sesion_blogger', 'comentarios'));
             }
             else{
-                return view('admin_show_juego', compact('juego'));
+                $sesion_regular_user = 1;
+                return view('blogger_show_blog', compact('blog', 'sesion_regular_user', 'comentarios'));
             }
         }
         else{
-            return view('admin_show_juego', compact('juego'));
+            $sesion_invitado = 1;
+            return view('blogger_show_blog', compact('blog', 'sesion_invitado', 'comentarios'));
         }
+    }
+
+    public function storeComentario2(Request $request, Blog $blog){
+        $request->merge([
+            'user_id' => Auth::id(),
+            'juego_id' => $blog->juego_id,
+            'blog_id'=> $blog->id
+
+        ]);
+        $comentarioTable = new Comentario();
+        $comentarioTable->user_id = $request->user_id;
+        $comentarioTable->juego_id = $blog->juego_id;
+        $comentarioTable->blog_id = $blog->id;
+        $comentarioTable->comentario = $request->comentario;
+        $comentarioTable->save();
+
+        return redirect()->back();
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Juego  $juego
+     * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
     // Aquí se llama a la ventana de creación, pero con un parámetro extra que le indica que en
     // lugar de crear datos, se hará modificación de estos. Es decir, editarlos.
-    public function edit(Juego $juego, Request $request)
+    public function edit(Blog $blog, Request $request)
     {
         if($request->user()){
-            $request->user()->authorizeRoles('Administrador');
-            $generos = Genero::All();
-            return view('admin_update_juego', compact('juego', 'generos'));
+            $request->user()->authorizeRoles('Blogger');
+            $juegos = Juego::All();
+            return view('blogger_editar_blog', compact('blog', 'juegos'));
         }
         else{
             abort(401, 'No estás autorizado para realizar esta acción');
@@ -157,62 +159,38 @@ class BlogController extends Controller
      */
     // Así como es el método de store para crear, éste funciona de la misma manera para edit. Es decir, se 
     // encarga de actualizar los datos después de haber modificado los datos a editar.
-    public function update(Request $request, Juego $juego)
+    public function update(Request $request, Blog $blog)
     {
         // Validar datos
         $request->validate([
             'titulo' => [
                 'required', 
-                Rule::unique('juegos')->ignore($juego),
+                Rule::unique('blogs')->ignore($blog),
             ],
-            'fecha_de_publicacion' => 'required',
-            'empresa_editora' => 'required|max:255',
+            'contenido' => 'required',
         ]);
-        
-        #$image_just_in_case = Imagen::where('juego_id', $juego->id)->first();
-        if($request->imagen === null){
-            $ruta = Imagen::where('juego_id', $juego->id)->first()->imagen_ruta;
-            $mime = Imagen::where('juego_id', $juego->id)->first()->mime;
-            $nombre_original = Imagen::where('juego_id', $juego->id)->first()->imagen_original;
-        }
-        else{
-            $ruta = $request->imagen->store();
-            $mime = $request->imagen->getClientMimeType();
-            $nombre_original = $request->imagen->getClientOriginalName();
-        }
 
         $request->merge([
-            'user_id' => $juego->user_id,
-            'descripcion' => $request->descripcion ?? $juego->descripcion,
-            'imagen_original' => $nombre_original,
-            'imagen_ruta' => $ruta,
-            'mime' => $mime,
-            #'imagen' => $request->imagen ?? $image_just_in_case,
+            'user_id' => $blog->user_id,
+            'juego_id' => $request->juego_id ?? $blog->juego_id,
+            'contenido' => $request->contenido ?? $blog->contenido,
         ]);
-        Juego::where('id', $juego->id)->update($request->except('_token', '_method', 'genero_id', 'imagen_original', 'imagen_ruta', 'mime'));
-        $juego->generos()->sync($request->genero_id);
+
+        Blog::where('id', $blog->id)->update($request->except('_token', '_method', 'website'));
         
-        $imagenTable = new Imagen();  
-        $imagenTable->juego_id = $juego->id;
-        $imagenTable->imagen_ruta = $request->imagen_ruta; 
-        $imagenTable->imagen_original = $request->imagen_original; 
-        $imagenTable->mime = $request->mime; 
-        $imagenTable->save(); 
-        $juego->imagenes()->save($imagenTable);
-        
-        return redirect()->route('juegos.show', $juego);
+        return redirect()->route('blogs.show', $blog);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Juego  $juego
+     * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
     // Este método se encarga de eliminar a la persona que recibe como parámetro
-    public function destroy(Juego $juego)
+    public function destroy(Blog $blog)
     {
-        $juego->delete();
-        return redirect()->route('juegos.index');
+        $blog->delete();
+        return redirect()->route('blogs.index');
     }
 }

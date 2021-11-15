@@ -1,27 +1,32 @@
 @include('top')
-<body>
-    <h1>{{ $juego->titulo }}</h1>
-    <a href="{{route('main_page')}}">Otros juegos disponibles</a>
+<div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
+    <h3 class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8">{{ $juego->titulo }}</h3>
+    <br>
+    <img src="..\public\imagenes\{{$juego->icono}}" alt="{{$juego->titulo}}.jpg">
+    <br>
+    <a class="text-gray-800 underline hover:text-gray-900" href="{{route('main_page')}}">Otros juegos disponibles</a>
+    <br>
     <ul>
-        Descripcion:
-        <li>{{ $juego->descripcion }} {{ $juego->apellido_materno }}</li>
+        <h2 class="font-bold text-gray-900">Sinopsis:</h2>
+        <li>{{ $juego->descripcion }}</li>
         <br>
-        Fecha de publicación:
+        <h2 class="font-bold text-gray-900">Fecha de publicación:</h2>
         <li>{{ $juego->fecha_de_publicacion }}</li>
         <br>
-        Empresa editora:
+        <h2 class="font-bold text-gray-900">Empresa editora:</h2>
         <li>{{ $juego->empresa_editora }}</li>
         <br>
-        Precio:
+        <h2 class="font-bold text-gray-900">Precio:</h2>
         <li>{{ $juego->precio }}</li>
         <br>
         <?php if(isset($sesion_admin)) : ?>
-            Registrado en el sistema:
+            <h2 class="font-bold text-gray-900">Registrado en el sistema:</h2>
             <li>{{ $juego->created_at }}</li>
             <br>
-            Última edición:
+            <h2 class="font-bold text-gray-900">Última edición:</h2>
             <li>{{ $juego->updated_at }}</li>
-            Añadido por el usuario:
+            <br>
+            <h2 class="font-bold text-gray-900">Añadido por el usuario:</h2>
             <li>{{ $juego->user_id }}</li>
         <?php endif; ?>
     </ul>
@@ -44,10 +49,11 @@
             <input type="submit" value="Enviar">
         </form>
         <hr>
-        <a href="{{ route('enviar-correo', $juego->id) }}">Comprar Juego</a>
+        <a class="text-gray-800 underline hover:text-gray-900" href="{{ route('enviar-correo', $juego->id) }}">Comprar Juego</a>
     <?php endif; ?>
     <hr>
-    Comentarios del juego:
+    <br> 
+    <h2 class="font-bold text-gray-900">Comentarios del juego:</h2>
     <table border="1">
         <thead>
             <tr>
@@ -73,5 +79,6 @@
         <input type="submit" value="Eliminar">
     </form>
     <?php endif; ?>
+</div>
 </body>
 </html>

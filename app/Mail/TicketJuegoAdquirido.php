@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Juego;
+use App\Models\User;
 
 class TicketJuegoAdquirido extends Mailable
 {
@@ -16,9 +18,11 @@ class TicketJuegoAdquirido extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, Juego $juego)
     {
-        $this->ticket = "Adquiriste el juego!";
+        $this->ticket = "
+        Felicidades, $user->name.\n
+        Adquiriste $juego->titulo al precio de: $ $juego->precio mxn.";
     }
 
     /**

@@ -11,4 +11,10 @@ class Comentario extends Model
     protected $fillable = [
         'comentario',
     ];
+    public function juego(){
+        return $this->belongsTo(Juego::class);
+    }
+    public function blog(){
+        return $this->belongsTo(Blog::class);
+    }
 }

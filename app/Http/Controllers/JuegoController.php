@@ -78,29 +78,36 @@ class JuegoController extends Controller
             'empresa_editora' => 'required|max:255',
             'descripcion' => 'required',
         ]);
-        
-        #$ruta = $request->imagen->store('imagenes');
 
-        #$file = $request->file('index_image');
-        #$file->storeAs('Images', "my-cool-name." . $file->getClientOriginalExtension());
+        $icono = $request->file('imagen');
+        $nombre_icono = time().$icono->getClientOriginalName();
+        $icono->store('imagenes', ['disk' => 'my_files']);
+        #$icono->move(public_path().'/imagenes/', $nombre_icono);
 
         $mime = $request->imagen->getClientMimeType();
         $nombre_original = $request->imagen->getClientOriginalName();
-        #$ruta = $request->imagen->store('toPath', ['disk' => 'my_files']);
         $ruta = $request->imagen->store('images', ['disk' => 'my_files']);
-        #$ruta = $request->imagen->store('images');
         
         $request->merge([
             'imagen_original' => $nombre_original,
             'imagen_ruta' => $ruta,
             'mime' => $mime,
             'user_id' => Auth::id(),
+            'icono' => $nombre_icono,
         ]);
         
-        #$juego = Juego::create($request->all());
-        $juego = Juego::create($request->except('_token', '_method', 'genero_id', 'imagen'));
-        $juego->generos()->attach($request->genero_id);
+        #$juego = Juego::create($request->except('_token', '_method', 'genero_id', 'imagen'));
+
+        $juego = new Juego();
+        $juego->user_id = $request->user_id;
+        $juego->titulo = $request->titulo;
+        $juego->descripcion = $request->descripcion;
+        $juego->fecha_de_publicacion = $request->fecha_de_publicacion;
+        $juego->empresa_editora = $request->empresa_editora;
+        $juego->precio = $request->precio;
+        $juego->icono = $request->icono;
         $juego->save();
+        $juego->generos()->attach($request->genero_id);
 
         $imagenTable = new Imagen();  
         $imagenTable->juego_id = $juego->id;
@@ -123,21 +130,20 @@ class JuegoController extends Controller
     // Aquí se muestra los datos correspondientes a un juego en específico
     public function show(Juego $juego, Request $request)
     {
+        $comentarios = Comentario::where('juego_id', $juego->id)->get();
         if($request->user()){    
             if($request->user()->hasRole('Administrador')){
                 $sesion_admin = 1;
                 $editar = 1;
-                return view('admin_show_juego', compact('juego', 'editar', 'sesion_admin'));
+                return view('admin_show_juego', compact('juego', 'editar', 'sesion_admin', 'comentarios'));
             }
             else{
                 $sesion_usuario = 1;
-                $comentarios = Comentario::where('juego_id', $juego->id)->get();
                 return view('admin_show_juego', compact('juego', 'sesion_usuario', 'comentarios'));
             }
         }
         else{
             $sesion_invitado = 1;
-            $comentarios = Comentario::where('juego_id', $juego->id)->get();
             return view('admin_show_juego', compact('juego', 'sesion_invitado', 'comentarios'));
         }
     }
@@ -255,7 +261,7 @@ class JuegoController extends Controller
     {
         $user = Auth::user();
         $juego->users()->attach($user->id);
-        Mail::to($user->email)->send(new TicketJuegoAdquirido);
+        Mail::to($user->email)->send(new TicketJuegoAdquirido($user, $juego));
         return redirect()->back();
     }
 }
