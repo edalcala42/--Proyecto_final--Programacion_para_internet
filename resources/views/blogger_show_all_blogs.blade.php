@@ -28,5 +28,7 @@
             @endforeach
         </tbody>
     </table>
+    <x-success-message></x-success-message>
+    <x-deleted-message></x-deleted-message>
 </body>
 </html>

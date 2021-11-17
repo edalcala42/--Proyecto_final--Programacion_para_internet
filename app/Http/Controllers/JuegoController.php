@@ -118,7 +118,7 @@ class JuegoController extends Controller
 
         $juego->imagenes()->save($imagenTable);
         
-        return redirect()->route('juegos.index');
+        return redirect()->route('juegos.index')->with('message', '¡Se agregó el nuevo juego con éxito!');
     }
 
     /**
@@ -254,7 +254,7 @@ class JuegoController extends Controller
     public function destroy(Juego $juego)
     {
         $juego->delete();
-        return redirect()->route('juegos.index');
+        return redirect()->route('juegos.index')->with('message', '¡Se eliminó el juego con éxito!');
     }
 
     public function enviarJuego(Request $request, Juego $juego)

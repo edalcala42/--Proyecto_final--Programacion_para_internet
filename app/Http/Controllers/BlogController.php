@@ -44,7 +44,6 @@ class BlogController extends Controller
 
     public function create(Request $request)
     {
-        // Para crear un juego, se necesita de un modelo.
         if($request->user()){
             $request->user()->authorizeRoles('Blogger');
             $juegos = Juego::All();
@@ -84,7 +83,7 @@ class BlogController extends Controller
         $blog->contenido = $request->contenido;
         $blog->save(); 
         
-        return redirect()->route('blogs.index');
+        return redirect()->route('blogs.index')->with('message', '¡Se guardó el blog con éxito!');
     }
 
     /**
@@ -191,6 +190,6 @@ class BlogController extends Controller
     public function destroy(Blog $blog)
     {
         $blog->delete();
-        return redirect()->route('blogs.index');
+        return redirect()->route('blogs.index')->with('message', '¡Se eliminó el blog con éxito!');
     }
 }
