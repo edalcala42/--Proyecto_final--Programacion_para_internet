@@ -12,6 +12,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketJuegoAdquirido;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class JuegoController extends Controller
 {
@@ -24,19 +26,11 @@ class JuegoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    //Página principal de juegos. Se muestra todo.
+    
     public function index(Request $request)
     {
-        if($request->user()){
-            $request->user()->authorizeRoles('Administrador');
-            $juegos = Juego::All();
-            $imagenes = Imagen::All();
-        }
-        else{
-            abort(401, 'No estás autorizado para realizar esta acción');
-        }
-        
-
+        $juegos = Juego::All();
+        $imagenes = Imagen::All();
         return view('admin_show_all_juegos', compact('juegos', 'imagenes'));
     }
 
@@ -45,11 +39,9 @@ class JuegoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // Se muestra una página para crear juegos. Es decir, se muestran los campos a llenar.
-    // Para guardarlos de verdad, se hace uso del método store
+    
     public function create(Request $request)
     {
-        // Para crear un juego, se necesita de un modelo.
         if($request->user()){
             $request->user()->authorizeRoles('Administrador');
             $generos = Genero::All();
@@ -67,8 +59,7 @@ class JuegoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // Se llama después de haber llenado los campos a create y presionar el botón de submit.
-    // Aquí se guarda el nuevo registro en la base de datos
+    
     public function store(Request $request)
     {
         // Validar datos
@@ -127,7 +118,7 @@ class JuegoController extends Controller
      * @param  \App\Models\Juego  $juego
      * @return \Illuminate\Http\Response
      */
-    // Aquí se muestra los datos correspondientes a un juego en específico
+    
     public function show(Juego $juego, Request $request)
     {
         $comentarios = Comentario::where('juego_id', $juego->id)->get();
@@ -158,6 +149,7 @@ class JuegoController extends Controller
     public function storeComentario(Request $request, Juego $juego){
         $request->merge([
             'user_id' => Auth::id(),
+            'comentario' => $request->comentario ?? 'hello',
         ]);
         $comentarioTable = new Comentario();
         $comentarioTable->user_id = $request->user_id;
@@ -175,8 +167,6 @@ class JuegoController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    // Aquí se llama a la ventana de creación, pero con un parámetro extra que le indica que en
-    // lugar de crear datos, se hará modificación de estos. Es decir, editarlos.
     public function edit(Juego $juego, Request $request)
     {
         if($request->user()){
@@ -196,8 +186,7 @@ class JuegoController extends Controller
      * @param  \App\Models\Juego  $juego
      * @return \Illuminate\Http\Response
      */
-    // Así como es el método de store para crear, éste funciona de la misma manera para edit. Es decir, se 
-    // encarga de actualizar los datos después de haber modificado los datos a editar.
+    
     public function update(Request $request, Juego $juego)
     {
         // Validar datos
@@ -250,7 +239,7 @@ class JuegoController extends Controller
      * @param  \App\Models\Juego  $juego
      * @return \Illuminate\Http\Response
      */
-    // Este método se encarga de eliminar a la persona que recibe como parámetro
+    
     public function destroy(Juego $juego)
     {
         $juego->delete();
@@ -262,6 +251,54 @@ class JuegoController extends Controller
         $user = Auth::user();
         $juego->users()->attach($user->id);
         Mail::to($user->email)->send(new TicketJuegoAdquirido($user, $juego));
-        return redirect()->back();
+        return redirect()->back()->with('message', '¡Felicidades, adquiriste el juego! Se te envió un correo con más detalles al respecto.');
+    }
+
+    public function uploadMoreFiles(Request $request, Juego $juego)
+    {
+        if($request->user()->hasRole('Administrador')){
+            return view('admin_subir_mas_archivos', compact('juego'));
+        }
+        else{
+            abort(401, 'No estás autorizado para realizar esta acción');
+        }
+    }
+    public function storeMoreFiles(Request $request, Juego $juego)
+    {
+        $request->validate([
+            'imagenes' => 'required',
+        ]);
+        $imagenes = $request->imagenes;
+        $total = 0;
+
+        foreach ($imagenes as $imagen) {
+            $mime = $imagen->getClientMimeType();
+            $nombre_original = $imagen->getClientOriginalName();
+            $ruta = $imagen->store('images', ['disk' => 'my_files']);
+
+            $request->merge([
+                'mime' => $mime,
+                'imagen_original' => $nombre_original,
+                'imagen_ruta' => $ruta,
+                'user_id' => Auth::id(),
+            ]);
+
+            $imagenTable = new Imagen();  
+            $imagenTable->juego_id = $juego->id;
+            $imagenTable->imagen_original = $request->imagen_original; 
+            $imagenTable->imagen_ruta = $request->imagen_ruta; 
+            $imagenTable->mime = $request->mime; 
+            $imagenTable->save(); 
+
+            $juego->imagenes()->save($imagenTable);
+            $total += 1;
+        }
+
+        if($total > 1){
+            return redirect()->route('juegos.index')->with('message', '¡Se agregaron las nuevas imagenes con éxito!');
+        }
+        else{
+            return redirect()->route('juegos.index')->with('message', '¡Se agregó la nueva imagen con éxito!');
+        }
     }
 }

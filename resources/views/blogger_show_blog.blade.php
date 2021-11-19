@@ -9,7 +9,7 @@
         <h2 class="font-bold text-gray-900">Contenido:</h2>
         <li>{{ $blog->contenido }}</li>
         <br>
-        <?php if(isset($sesion_admin)) : ?>
+        <?php if(isset($sesion_blogger)) : ?>
             <h2 class="font-bold text-gray-900">Registrado en el sistema:</h2>
             <li>{{ $blog->created_at }}</li>
             <br>

@@ -61,8 +61,7 @@ class BlogController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // Se llama después de haber llenado los campos a create y presionar el botón de submit.
-    // Aquí se guarda el nuevo registro en la base de datos
+    
     public function store(Request $request)
     {
         // Validar datos
@@ -135,8 +134,7 @@ class BlogController extends Controller
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    // Aquí se llama a la ventana de creación, pero con un parámetro extra que le indica que en
-    // lugar de crear datos, se hará modificación de estos. Es decir, editarlos.
+    
     public function edit(Blog $blog, Request $request)
     {
         if($request->user()){
@@ -156,8 +154,7 @@ class BlogController extends Controller
      * @param  \App\Models\Juego  $juego
      * @return \Illuminate\Http\Response
      */
-    // Así como es el método de store para crear, éste funciona de la misma manera para edit. Es decir, se 
-    // encarga de actualizar los datos después de haber modificado los datos a editar.
+    
     public function update(Request $request, Blog $blog)
     {
         // Validar datos
@@ -186,7 +183,7 @@ class BlogController extends Controller
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    // Este método se encarga de eliminar a la persona que recibe como parámetro
+    
     public function destroy(Blog $blog)
     {
         $blog->delete();

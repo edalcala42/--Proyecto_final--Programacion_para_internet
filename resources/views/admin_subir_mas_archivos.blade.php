@@ -540,7 +540,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
     /* Injected CSS Code */
 </style>
 
-<form class="jotform-form" action="{{ route('blogs.store')}}" method="POST" enctype="multipart/form-data" name="form_213005419183852" id="213005419183852" accept-charset="utf-8" autocomplete="on">
+<form class="jotform-form" action="{{ route('store-More-Files', $juego->id)}}" method="POST" enctype="multipart/form-data" name="form_213005419183852" id="213005419183852" accept-charset="utf-8" autocomplete="on">
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul>
@@ -551,7 +551,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
     </div>
   @endif
   @csrf
-  <form action="{{ route('blogs.store')}}" method="POST" enctype="multipart/form-data">
+  <form action="{{ route('store-More-Files', $juego->id)}}" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="formID" value="213005419183852" />
   <input type="hidden" id="JWTContainer" value="" />
   <input type="hidden" id="cardinalOrderNumber" value="" />
@@ -564,40 +564,13 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
         <div class="form-header-group  header-large">
           <div class="header-text httal htvam">
             <h1 id="header_1" class="form-header" data-component="header">
-              ¡Crea un nuevo blog!
+              ¡Añade imagenes al juego {{ $juego->titulo }}!
             </h1>
           </div>
         </div>
       </li>
-      <li class="form-line" data-type="control_fullname" id="id_4">
-        <label class="form-label form-label-top form-label-auto" id="label_4" for="first_4"> Datos </label>
-        <div id="cid_4" class="form-input-wide" data-layout="full">
-          <div data-wrapper-react="true">
-            <span class="form-sub-label-container" style="vertical-align:top" data-input-type="first">
-              <input type="text" id="first_4" name="titulo" class="form-textbox" size="10" data-component="first" aria-labelledby="label_4 sublabel_4_first"/>
-              <label class="form-sub-label" for="first_4" id="sublabel_4_first" style="min-height:13px" aria-hidden="false"> Título </label>
-            </span>
-          </div>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_dropdown" id="id_7">
-        <label class="form-label form-label-top form-label-auto" id="label_7" for="input_7"> Juego que se aborda en el blog </label>
-        <div id="cid_7" class="form-input-wide" data-layout="half">
-          <select class="form-dropdown" id="input_7" name="juego_id" style="width:310px" data-component="dropdown" multiple>
-          @foreach($juegos as $juego)
-            <option value="{{$juego->id}}">
-                {{$juego->titulo}}        
-         	</option>
-   	      @endforeach
-          </select>
-        </div>
-      </li>
-      <li class="form-line" data-type="control_textarea" id="id_8">
-        <label class="form-label form-label-top form-label-auto" id="label_8" for="input_8"> Texto del blog: </label>
-        <div id="cid_8" class="form-input-wide" data-layout="full">
-          <textarea id="input_8" class="form-textarea" name="contenido" style="width:648px;height:163px" data-component="textarea" aria-labelledby="label_8" value="{{ $juego->descripcion ?? ''}}"></textarea>
-        </div>
-      </li>
+      <label for="imagen">Sube una imagen del juego, por favor</label>
+      <input type="file" id="imagen" name="imagenes[]" accept="image/png, image/jpeg" multiple>
       <li class="form-line" data-type="control_button" id="id_2">
         <div id="cid_2" class="form-input-wide" data-layout="full">
           <div data-align="left" class="form-buttons-wrapper form-buttons-left   jsTest-button-wrapperField">
@@ -607,23 +580,6 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
           </div>
         </div>
       </li>
-      <li style="display:none">
-        Should be Empty:
-        <input type="text" name="website" value="" />
-      </li>
     </ul>
-  </div>
-  <div class="formFooter-heightMask">
-  </div>
-  <div class="formFooter f6 branding21">
-    <div class="formFooter-wrapper formFooter-leftSide">
-      <a href="https://www.jotform.com/?utm_source=formfooter&utm_medium=banner&utm_term=213005419183852&utm_content=jotform_logo&utm_campaign=powered_by_jotform_le" target="_blank" class="formFooter-logoLink"><img class="formFooter-logo" src="https://cdn.jotfor.ms/assets/img/logo2021/jotform-logo-white.svg" alt="Jotform Logo" style="height: 44px;"></a>
-    </div>
-    <div class="formFooter-wrapper formFooter-rightSide">
-      <span class="formFooter-text">
-        Now create your own Jotform - It's free!
-      </span>
-      <a class="formFooter-button" href="https://www.jotform.com/?utm_source=formfooter&utm_medium=banner&utm_term=213005419183852&utm_content=jotform_button&utm_campaign=powered_by_jotform_le" target="_blank">Create your own Jotform</a>
-    </div>
   </div>
 </form>
