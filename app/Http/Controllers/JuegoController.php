@@ -31,6 +31,12 @@ class JuegoController extends Controller
     {
         $juegos = Juego::All();
         $imagenes = Imagen::All();
+        if($request->user()){
+            if($request->user()->hasRole('Administrador')){
+                $sesion_admin = 1;
+                return view('admin_show_all_juegos', compact('juegos', 'imagenes', 'sesion_admin'));
+            }
+        }
         return view('admin_show_all_juegos', compact('juegos', 'imagenes'));
     }
 

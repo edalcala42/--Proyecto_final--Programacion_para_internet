@@ -631,25 +631,6 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"anadeUn","qid":"1","text":"Anade un
           </div>
         </div>
       </li>
-      <li style="display:none">
-        Should be Empty:
-        <input type="text" name="website" value="" />
-      </li>
     </ul>
   </div>
-  <div class="formFooter-heightMask">
-  </div>
-  <div class="formFooter f6 branding21">
-    <div class="formFooter-wrapper formFooter-leftSide">
-      <a href="https://www.jotform.com/?utm_source=formfooter&utm_medium=banner&utm_term=213005419183852&utm_content=jotform_logo&utm_campaign=powered_by_jotform_le" target="_blank" class="formFooter-logoLink"><img class="formFooter-logo" src="https://cdn.jotfor.ms/assets/img/logo2021/jotform-logo-white.svg" alt="Jotform Logo" style="height: 44px;"></a>
-    </div>
-    <div class="formFooter-wrapper formFooter-rightSide">
-      <span class="formFooter-text">
-        Now create your own Jotform - It's free!
-      </span>
-      <a class="formFooter-button" href="https://www.jotform.com/?utm_source=formfooter&utm_medium=banner&utm_term=213005419183852&utm_content=jotform_button&utm_campaign=powered_by_jotform_le" target="_blank">Create your own Jotform</a>
-    </div>
-  </div>
 </form>
-<script src="https://cdn.jotfor.ms//js/vendor/smoothscroll.min.js?v=3.3.28740"></script>
-<script src="https://cdn.jotfor.ms//js/errorNavigation.js?v=3.3.28740"></script>

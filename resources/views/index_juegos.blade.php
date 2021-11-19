@@ -218,8 +218,11 @@ Alternatively if you want to just have a single hero
                     <p class="pt-1 text-gray-900">£9.99</p>
                 </a>
             </div>
-
-            </div>
+            <br><br>
+            <a class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8 hover:text-blue-900" href="{{ route('juegos.index')}}">
+                Para ver la lista completa de juegos, puedes seguir este enlace
+            </a>
+        </div>
 
     </section>
 

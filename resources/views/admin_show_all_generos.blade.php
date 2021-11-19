@@ -1,31 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de generos</title>
-</head>
-<body>
+@include('top')
+<div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
+    <x-success-message></x-success-message>
+    <x-deleted-message></x-deleted-message>
     <h1>Generos registrados.</h1>
-    <a href="{{ route('generos.create') }}">Agregar un nuevo genero.</a>
-    <table border="1">
-        <thead>
+    <a class="text-gray-800 underline hover:text-red-900" href="{{ route('generos.create') }}">Agregar un nuevo genero.</a>
+    <table class="table-auto border-separate border border-green-900">
+        <thead class="bg-gray-50">
             <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Descripcion</th>
+                <th class="w-1/8 ...">ID</th>
+                <th class="w-1/8 ...">Nombre</th>
+                <th class="w-1/8 ...">Descripcion</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="divide-y divide-gray-300">
             @foreach ($generos as $genero)
-                <tr>
-                    <td><a href="{{ route('generos.show', $genero) }}">
+                <tr class="bg-blue-50">
+                    <td class="font-serif ..."><a href="{{ route('generos.show', $genero) }}">
                             {{ $genero->id }}
                         </a>
                     </td>
-                    <td>{{ $genero->nombre_genero }}</td>
-                    <td>{{ $genero->descripcion_genero }}</td>
+                    <td class="font-serif font-bold hover:text-blue-900"><a href="{{ route('generos.show', $genero) }}">
+                        {{ $genero->nombre_genero }}
+                        </a>
+                    </td>
+                    <td class="font-serif ...">{{ $genero->descripcion_genero }}</td>
                 </tr>
             @endforeach
         </tbody>

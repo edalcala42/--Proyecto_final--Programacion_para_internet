@@ -1,4 +1,6 @@
 <x-app-layout>
+<div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
+    <h1>Helloooo!</h1>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
@@ -13,4 +15,4 @@
         </div>
     </div>
 </x-app-layout>
-<h1>Hola</h1>
+</div>

@@ -3,7 +3,7 @@
     <h3 class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8">{{ $blog->titulo }}</h3>
     <br>
     <br>
-    <a class="text-gray-800 underline hover:text-gray-900" href="{{route('main_page')}}">Otros blogs disponibles</a>
+    <a class="text-gray-800 underline hover:text-gray-900" href="{{route('blogs.index')}}">Otros blogs disponibles</a>
     <br>
     <ul>
         <h2 class="font-bold text-gray-900">Contenido:</h2>
@@ -44,24 +44,26 @@
     <hr>
     <br> 
     <h2 class="font-bold text-gray-900">Comentarios del blog:</h2>
-    <table border="1">
-        <thead>
+    <table class="table-auto border-separate border border-green-900">
+        <thead class="bg-gray-50">
             <tr>
                 <th>user_id</th>
                 <th>Comentario</th>
             </tr>
         </thead>
-        @foreach ($comentarios as $comentario)
-            <tr>
-                <td>{{ $comentario->user_id }}</td>
-                <td>{{ $comentario->comentario }}</td>
-            </tr>
-        @endforeach
+        <tbody class="divide-y divide-gray-300">
+            @foreach ($comentarios as $comentario)
+                <tr>
+                    <td class="font-serif font-bold">{{ $comentario->user_id }}</td>
+                    <td class="font-serif font-italic">{{ $comentario->comentario }}</td>
+                </tr>
+            @endforeach
+        </tbody>
         <hr>  
     </table>
     <?php if(isset($sesion_blogger)) : ?>
         <hr>
-        <a href="{{route('blogs.edit', $blog->id)}}">Editar</a>
+        <a class="h-8 px-5 m-2 text-indigo-100 transition-colors duration-150 bg-blue-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" href="{{route('blogs.edit', $blog->id)}}">Editar</a>
         <hr>
         <form action="{{ route('blogs.destroy', $blog) }}" method="post">
             @method('DELETE')
