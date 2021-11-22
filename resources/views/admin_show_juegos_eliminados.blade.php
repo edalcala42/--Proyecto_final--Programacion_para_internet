@@ -1,12 +1,6 @@
 @include('top')
 <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
-    <x-success-message></x-success-message>
-    <x-deleted-message></x-deleted-message>
-    <h1 class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8">Juegos registrados.</h1>
-    <?php if(isset($sesion_admin)) : ?>
-        <a class="text-gray-800 underline hover:text-red-900" href="{{ route('juegos.create') }}">Agregar un nuevo juego.</a>
-        <a class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8" href="{{ route('show-juegos-eliminados') }}">Mostrar juegos eliminados.</a>
-    <?php endif; ?>
+    <h1 class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8">Juegos eliminados.</h1>
     <table class="table-auto border-separate border border-green-900">
         <thead class="bg-gray-50">
             <tr>
@@ -19,6 +13,7 @@
                 <th class="w-1/8 ...">Añadido</th>
                 <th class="w-1/8 ...">Última edición</th>
                 <th class="w-1/8 ...">Precio ($mx)</th>
+                <th class="w-1/8 ...">Restaurar</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-300">

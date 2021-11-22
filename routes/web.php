@@ -33,6 +33,10 @@ Route::get('enviar-correo/{juego}', [JuegoController::Class, 'enviarJuego'])->na
 Route::get('store-comentario/{juego}', [JuegoController::class, 'storeComentario'])->name('store-comentario');
 Route::get('upload-More-Files/{juego}', [JuegoController::class, 'uploadMoreFiles'])->name('upload-More-Files');
 Route::post('store-More-Files/{juego}', [JuegoController::class, 'storeMoreFiles'])->name('store-More-Files');
+Route::get('show-images/{juego}', [JuegoController::class, 'showImages'])->name('show-images');
+Route::get('delete-image/{imagen}', [JuegoController::class, 'deleteImage'])->name('delete-image');
+Route::get('show-juegos-eliminados', [JuegoController::class, 'showJuegosEliminados'])->name('show-juegos-eliminados');
+Route::get('restaurar-juego-eliminado', [JuegoController::class, 'restaurarJuegoEliminado'])->name('restaurar-juego-eliminado');
 
 Route::resource('blogs', BlogController::class);
 Route::get('store-comentario2/{blog}', [BlogController::class, 'storeComentario2'])->name('store-comentario2');

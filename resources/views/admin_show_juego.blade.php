@@ -34,6 +34,8 @@
             <br>
             <a class="font-bold text-gray-900 hover:text-red-900" href="{{ route('upload-More-Files', $juego->id) }}">Subir imagenes del juego</a>
             <br>
+            <a class="font-bold text-gray-900 hover:text-red-900" href="{{ route('show-images', $juego->id) }}">Ver el listado de imagenes</a>
+            <br>
             <br>
         <?php endif; ?>
     </ul>

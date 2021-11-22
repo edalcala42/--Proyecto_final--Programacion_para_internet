@@ -146,6 +146,51 @@ class JuegoController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Juego  $juego
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function showImages(Juego $juego, Request $request)
+    {
+        $imagenes = Imagen::where('juego_id', $juego->id)->get();
+        if($request->user()){    
+            if($request->user()->hasRole('Administrador')){
+                $sesion_admin = 1;
+                return view('admin_show_juego_imagenes', compact('juego', 'sesion_admin', 'imagenes'));
+            }
+            else{
+                $sesion_usuario = 1;
+                return view('admin_show_juego_imagenes', compact('juego', 'sesion_usuario', 'imagenes'));
+            }
+        }
+        else{
+            $sesion_invitado = 1;
+            return view('admin_show_juego_imagenes', compact('juego', 'sesion_invitado', 'imagenes'));
+        }
+    }
+
+    public function showJuegosEliminados(Juego $juego, Request $request)
+    {
+        $juegos = Juego::onlyTrashed()->get();
+        if($request->user()){
+            $request->user()->authorizeRoles('Administrador');
+            $generos = Genero::All();
+            return view('admin_show_juegos_eliminados', compact('generos', 'juegos'));
+        }
+        else{
+            abort(401, 'No estás autorizado para realizar esta acción');
+        }
+    }
+
+    public function restaurarJuegoEliminado(Juego $juego, Request $request)
+    {
+        Juego::withTrashed()->find($juego->id)->restore();
+        return redirect()->route('juegos.index')->with('message', '¡Juego restaurado con éxito!');
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Juego  $juego
@@ -212,9 +257,13 @@ class JuegoController extends Controller
             $nombre_original = Imagen::where('juego_id', $juego->id)->first()->imagen_original;
         }
         else{
-            $ruta = $request->imagen->store();
+            $icono = $request->file('imagen');
+            $nombre_icono = time().$icono->getClientOriginalName();
+            $icono->store('imagenes', ['disk' => 'my_files']);
+
             $mime = $request->imagen->getClientMimeType();
             $nombre_original = $request->imagen->getClientOriginalName();
+            $ruta = $request->imagen->store('images', ['disk' => 'my_files']);
         }
 
         $request->merge([
@@ -223,9 +272,9 @@ class JuegoController extends Controller
             'imagen_original' => $nombre_original,
             'imagen_ruta' => $ruta,
             'mime' => $mime,
-            #'imagen' => $request->imagen ?? $image_just_in_case,
+            'icono' => $nombre_icono,
         ]);
-        Juego::where('id', $juego->id)->update($request->except('_token', '_method', 'genero_id', 'imagen_original', 'imagen_ruta', 'mime'));
+        Juego::where('id', $juego->id)->update($request->except('_token', '_method', 'genero_id', 'imagen_original', 'imagen_ruta', 'mime', 'imagen'));
         $juego->generos()->sync($request->genero_id);
         
         $imagenTable = new Imagen();  
@@ -250,6 +299,12 @@ class JuegoController extends Controller
     {
         $juego->delete();
         return redirect()->route('juegos.index')->with('message', '¡Se eliminó el juego con éxito!');
+    }
+
+    public function deleteImage(Imagen $imagen)
+    {
+        $imagen->delete();
+        return redirect()->back()->with('message', '¡Se eliminó la imagen con éxito!');
     }
 
     public function enviarJuego(Request $request, Juego $juego)
