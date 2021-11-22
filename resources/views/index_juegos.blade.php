@@ -222,6 +222,10 @@ Alternatively if you want to just have a single hero
             <a class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8 hover:text-blue-900" href="{{ route('juegos.index')}}">
                 Para ver la lista completa de juegos, puedes seguir este enlace
             </a>
+            <br><br>
+            <a class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8 hover:text-red-900" href="{{ route('blogs.index')}}">
+                Si te interesa conocer la opinión de alguno de nuestros usuarios bloggers sobre los juegos registrados, puedes seguir este enlace.
+            </a>
         </div>
 
     </section>

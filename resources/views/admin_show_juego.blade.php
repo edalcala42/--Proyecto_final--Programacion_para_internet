@@ -1,5 +1,6 @@
 @include('top')
 <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
+    <x-success-message></x-success-message>
     <h3 class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8">{{ $juego->titulo }}</h3>
     <br>
     <img src="C:\laragon\www\game_paradise\resources\views\Bloodstained.jpg" alt="{{$juego->titulo}}.jpg">

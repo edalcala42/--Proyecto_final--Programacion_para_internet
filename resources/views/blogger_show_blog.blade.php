@@ -1,5 +1,6 @@
 @include('top')
 <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-6 py-3">
+    <x-success-message></x-success-message>
     <h3 class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8">{{ $blog->titulo }}</h3>
     <br>
     <br>
@@ -24,8 +25,9 @@
     </ul>
     <?php if(isset($sesion_invitado)) : ?>
         <hr>
-        <a href="{{ route('login') }}"><h4>Si deseas realizar algún comentario al respecto, por favor inicia sesión dando clic aquí.</h4></a>
-        <a href="{{ route('register') }}"><h4>Y si no tienes un cuenta, puedes crear una aquí.</h4></a>
+        <a class="text-gray-800 underline hover:text-gray-900" href="{{ route('login') }}"><h4>Si deseas realizar algún comentario al respecto, por favor inicia sesión dando clic aquí.</h4></a>
+        <br>
+        <a class="text-gray-800 underline hover:text-gray-900" href="{{ route('register') }}"><h4>Y si no tienes un cuenta, puedes crear una aquí.</h4></a>
         <hr>
     <?php endif; ?>
     
@@ -35,10 +37,10 @@
             <li class="form-line" data-type="control_textarea" id="id_8">
                 <label class="form-label form-label-top form-label-auto" id="label_8" for="input_8">¿Te gustaría dejar algún comentario al respecto?<br> </label>
                 <div id="cid_8" class="form-input-wide" data-layout="full">
-                    <textarea id="input_8" class="form-textarea" name="comentario" style="width:648px;height:163px" data-component="textarea" aria-labelledby="label_8"></textarea>
+                    <textarea id="input_8" class="form-textarea border-green-300 bg-green-50 placeholder-gray-400 text-green-900" name="comentario" style="width:648px;height:163px" data-component="textarea" aria-labelledby="label_8"></textarea>
                 </div>
             </li>
-            <input type="submit" value="Enviar">
+            <input class="h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" type="submit" value="Enviar comentario">
         </form>
     <?php endif; ?>
     <hr>

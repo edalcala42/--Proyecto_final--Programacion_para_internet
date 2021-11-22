@@ -236,7 +236,7 @@ class JuegoController extends Controller
         $imagenTable->save(); 
         $juego->imagenes()->save($imagenTable);
         
-        return redirect()->route('juegos.show', $juego);
+        return redirect()->route('juegos.show', $juego)->with('message', '¡Se editó el juego con éxito!');;
     }
 
     /**

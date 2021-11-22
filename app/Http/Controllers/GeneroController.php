@@ -123,7 +123,7 @@ class GeneroController extends Controller
 
         Genero::where('id', $genero->id)->update($request->except('_token', '_method', 'website'));
         
-        return redirect()->route('generos.show', $genero);
+        return redirect()->route('generos.show', $genero)->with('message', '¡Se editó el genero con éxito!');;
     }
 
     /**

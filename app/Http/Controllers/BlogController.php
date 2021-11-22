@@ -26,12 +26,12 @@ class BlogController extends Controller
     
     public function index(Request $request)
     {
+        $blogs = Blog::All();
         if($request->user()){
-            $request->user()->authorizeRoles('Blogger');
-            $blogs = Blog::All();
-        }
-        else{
-            abort(401, 'No estás autorizado para realizar esta acción');
+            if($request->user()->hasRole('Blogger')){
+                $sesion_blogger = 1;
+                return view('blogger_show_all_blogs', compact('blogs', 'sesion_blogger'));
+            }
         }
         return view('blogger_show_all_blogs', compact('blogs'));
     }
@@ -163,7 +163,6 @@ class BlogController extends Controller
                 'required', 
                 Rule::unique('blogs')->ignore($blog),
             ],
-            'contenido' => 'required',
         ]);
 
         $request->merge([
@@ -174,7 +173,7 @@ class BlogController extends Controller
 
         Blog::where('id', $blog->id)->update($request->except('_token', '_method', 'website'));
         
-        return redirect()->route('blogs.show', $blog);
+        return redirect()->route('blogs.show', $blog)->with('message', '¡Se editó el blog con éxito!');;
     }
 
     /**

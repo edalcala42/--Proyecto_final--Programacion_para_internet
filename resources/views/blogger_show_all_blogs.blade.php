@@ -3,7 +3,9 @@
     <x-success-message></x-success-message>
     <x-deleted-message></x-deleted-message>
     <h1 class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8">Blogs registrados.</h1>
-    <a class="text-gray-800 underline hover:text-red-900" href="{{ route('blogs.create') }}">Agregar un nuevo blog.</a>
+    <?php if(isset($sesion_blogger)) : ?>
+        <a class="text-gray-800 underline hover:text-red-900" href="{{ route('blogs.create') }}">Agregar un nuevo blog.</a>
+    <?php endif; ?>
     <table class="table-auto border-separate border border-green-900">
         <thead class="bg-gray-50">
             <tr>
